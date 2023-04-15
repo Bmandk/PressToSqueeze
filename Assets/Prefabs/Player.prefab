@@ -370,6 +370,8 @@ MonoBehaviour:
   floorRaycastDistance: 1
   graphics: {fileID: 2673316789792902823}
   smallGravity: -0.3
+  waterShadowPrefab: {fileID: 2659776984955779016, guid: b106b1272fc945f4ab5918a4b0feacb6, type: 3}
+  waterShadowOffset: 0.6
 --- !u!58 &3469287838218011245
 CircleCollider2D:
   m_ObjectHideFlags: 0

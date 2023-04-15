@@ -24,11 +24,13 @@ public class PlayerInput : MonoBehaviour
     
     private Rigidbody2D _rigidbody2D;
     private SpongeScript _spongeScript;
-    
+    private Collider2D col;
+
     private void Awake()
     {
         _rigidbody2D = GetComponent<Rigidbody2D>();
         _spongeScript = GetComponent<SpongeScript>();
+        col = GetComponent<Collider2D>();
     }
 
     private void Update()
@@ -113,10 +115,11 @@ public class PlayerInput : MonoBehaviour
     private bool isSmallJumping;
     public Transform graphics;
     public float smallGravity;
+    public GameObject waterShadowPrefab;
+    public float waterShadowOffset;
 
     private void CheckSmallJump()
     {
-        var col = GetComponent<Collider2D>();
         RaycastHit2D[] results = new RaycastHit2D[9];
         if (!isSmallJumping && col.Raycast(Vector2.down, results, floorRaycastDistance) > 0)
         {
@@ -140,6 +143,16 @@ public class PlayerInput : MonoBehaviour
         var graphicsLocalPosition = graphics.localPosition;
         graphicsLocalPosition.y = 0;
         graphics.localPosition = graphicsLocalPosition;
+
+        RaycastHit2D[] results = new RaycastHit2D[9];
+        if (_spongeScript.currentWaterAmount > 0.05f && col.Raycast(Vector2.down, results, floorRaycastDistance) > 0)
+        {
+            var shadow = Instantiate(waterShadowPrefab, transform.position + Vector3.down * waterShadowOffset, Quaternion.identity);
+            var sr = shadow.GetComponent<SpriteRenderer>();
+            var color = sr.color;
+            color.a = _spongeScript.currentWaterAmount * color.a;
+            sr.color = color;
+        }
     }
 
     private void KeyboardSqueezeHold()
