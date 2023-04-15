@@ -9,7 +9,11 @@ public class WaterDrop : MonoBehaviour
     {
         if (other.CompareTag("Player") || other.CompareTag("WaterDrop"))
             return;
-        
+
+        var waterReceiver = other.GetComponent<WaterReceiver>();
+        if (waterReceiver != null) 
+            waterReceiver.AddWater(1);
+
         Destroy(gameObject);
     }
 }
