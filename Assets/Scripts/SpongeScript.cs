@@ -14,8 +14,21 @@ public class SpongeScript : MonoBehaviour
     public AnimationCurve squeezeCurve;
     [Range(0, 1)]
     public float squeezeValue;
+    
+    [Range(0, 100f)]
+    public float waterAbsorbRate = 0.01f;
+    [Range(0, 100f)]
+    public float waterSqueezeRate = 0.01f;
+    public float currentWaterAmount;
+    public Gradient waterColorGradient;
 
     private MeshFilter _meshFilter;
+    private MeshRenderer _meshRenderer;
+
+    private void Awake()
+    {
+        _meshRenderer = GetComponent<MeshRenderer>();
+    }
 
     [ContextMenu("Generate")]
     public void GenerateMesh()
@@ -84,6 +97,23 @@ public class SpongeScript : MonoBehaviour
     {
         // Clamp value between 0 and 1
         squeezeValue = Mathf.Clamp01(value + squeezeValue);
+        if (value > 0)
+            AddWaterAmount(-waterSqueezeRate * value);
         GenerateMesh();
+    }
+    
+    private void OnTriggerStay2D(Collider2D other)
+    {
+        if (other.CompareTag("Water"))
+        {
+            AddWaterAmount(waterAbsorbRate * Time.fixedDeltaTime);
+        }
+    }
+    
+    public void AddWaterAmount(float amount)
+    {
+        currentWaterAmount = Mathf.Clamp01(currentWaterAmount + amount);
+        var waterColor = waterColorGradient.Evaluate(currentWaterAmount);
+        _meshRenderer.material.color = waterColor;
     }
 }

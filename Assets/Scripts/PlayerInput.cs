@@ -12,7 +12,7 @@ public class PlayerInput : MonoBehaviour
 
     public float speed = 5f;
     public float jumpForce = 5f;
-    [FormerlySerializedAs("squeezeForce")] [Range(0, 0.1f)]
+    [FormerlySerializedAs("squeezeForce")] [Range(0, 100f)]
     public float squeezeHoldForce = 0.01f;
     [Range(0, 1f)]
     public float squeezePressForce = 0.1f;
@@ -70,18 +70,18 @@ public class PlayerInput : MonoBehaviour
     private void SqueezeHold(Gamepad gamepad)
     {
         int dir = gamepad.xButton.isPressed ? 1 : -1;
-        _spongeScript.Squeeze(squeezeHoldForce * dir);
+        _spongeScript.Squeeze(squeezeHoldForce * dir * Time.deltaTime);
     }
     
     private void SqueezePress(Gamepad gamepad)
     {
         if (gamepad.xButton.wasPressedThisFrame)
         {
-            _spongeScript.Squeeze(squeezePressForce);
+            _spongeScript.Squeeze(squeezePressForce * Time.deltaTime);
         }
         else if (!gamepad.xButton.isPressed)
         {
-            _spongeScript.Squeeze(-squeezeDecayForce);
+            _spongeScript.Squeeze(-squeezeDecayForce * Time.deltaTime);
         }
     }
 }
