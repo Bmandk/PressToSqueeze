@@ -32,24 +32,59 @@ public class PlayerInput : MonoBehaviour
     private void Update()
     {
         var gamepad = Gamepad.current;
-        
+
         if (gamepad == null)
         {
-            return;
+            KeyboardMovement();
+            switch (squeezeType)
+            {
+                case SqueezeType.Hold:
+                    KeyboardSqueezeHold();
+                    break;
+                case SqueezeType.Press:
+                    KeyboardSqueezePress();
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
-        Movement(gamepad);
-        switch (squeezeType)
+        else
         {
-            case SqueezeType.Hold:
-                SqueezeHold(gamepad);
-                break;
-            case SqueezeType.Press:
-                SqueezePress(gamepad);
-                break;
-            default:
-                throw new ArgumentOutOfRangeException();
+            Movement(gamepad);
+            switch (squeezeType)
+            {
+                case SqueezeType.Hold:
+                    SqueezeHold(gamepad);
+                    break;
+                case SqueezeType.Press:
+                    SqueezePress(gamepad);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
     }
+
+
+    private void KeyboardMovement()
+    {
+        Vector2 velocity = new Vector2();
+        if (Keyboard.current.aKey.isPressed)
+        {
+            velocity.x = -speed;
+        }
+        else if (Keyboard.current.dKey.isPressed)
+        {
+            velocity.x = speed;
+        }
+        velocity.y = _rigidbody2D.velocity.y;
+        if (Keyboard.current.spaceKey.wasPressedThisFrame)
+        {
+            velocity.y = jumpForce;
+        }
+        _rigidbody2D.velocity = velocity;
+    }
+
 
     private void Movement(Gamepad gamepad)
     {
@@ -66,11 +101,29 @@ public class PlayerInput : MonoBehaviour
 
         _rigidbody2D.velocity = velocity;
     }
+
+    private void KeyboardSqueezeHold()
+    {
+        int dir = Keyboard.current.eKey.isPressed ? 1 : -1;
+        _spongeScript.Squeeze(squeezeHoldForce * dir);
+    }
     
     private void SqueezeHold(Gamepad gamepad)
     {
         int dir = gamepad.xButton.isPressed ? 1 : -1;
         _spongeScript.Squeeze(squeezeHoldForce * dir);
+    }
+
+    private void KeyboardSqueezePress()
+    {
+        if (Keyboard.current.eKey.wasPressedThisFrame)
+        {
+            _spongeScript.Squeeze(squeezePressForce);
+        }
+        else if (!Keyboard.current.eKey.isPressed)
+        {
+            _spongeScript.Squeeze(-squeezeDecayForce);
+        }
     }
     
     private void SqueezePress(Gamepad gamepad)
