@@ -158,7 +158,7 @@ public class PlayerInput : MonoBehaviour
     private void KeyboardSqueezeHold()
     {
         int dir = Keyboard.current.eKey.isPressed ? 1 : -1;
-        _spongeScript.Squeeze(squeezeHoldForce * dir);
+        _spongeScript.Squeeze(squeezeHoldForce * dir * Time.deltaTime);
     }
     
     private void SqueezeHold(Gamepad gamepad)
