@@ -79,4 +79,11 @@ public class SpongeScript : MonoBehaviour
     {
         GenerateMesh();
     }
+    
+    public void Squeeze(float value)
+    {
+        // Clamp value between 0 and 1
+        squeezeValue = Mathf.Clamp01(value + squeezeValue);
+        GenerateMesh();
+    }
 }
