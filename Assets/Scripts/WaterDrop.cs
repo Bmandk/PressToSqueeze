@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class WaterDrop : MonoBehaviour
 {
+    public GameObject waterShadowPrefab;
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Player") || other.CompareTag("WaterDrop") || other.CompareTag("Water"))
@@ -14,6 +15,7 @@ public class WaterDrop : MonoBehaviour
         if (waterReceiver != null) 
             waterReceiver.AddWater(1);
 
+        Instantiate(waterShadowPrefab, transform.position, Quaternion.identity);
         Destroy(gameObject);
     }
 }
