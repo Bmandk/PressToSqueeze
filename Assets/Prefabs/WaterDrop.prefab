@@ -115,6 +115,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71918cb4fdf98184580959ed4e47c05b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  waterDropletAudioClips:
+  - {fileID: 8300000, guid: 744cddd4e46ae5d4da4be37241d3bad7, type: 3}
+  - {fileID: 8300000, guid: e48a45bfcb6fce846bcc57afb6fe3a1b, type: 3}
+  - {fileID: 8300000, guid: a4d722564d32cfd46b92a6b63e129891, type: 3}
+  - {fileID: 8300000, guid: 59efa906fb225614eb4014d1da8d07ad, type: 3}
+  - {fileID: 8300000, guid: 290409487b91b6f4aa875d7aad29d9a6, type: 3}
+  - {fileID: 8300000, guid: 1b511ff114534f14c96270b706441bb2, type: 3}
 --- !u!50 &5457932630162227981
 Rigidbody2D:
   serializedVersion: 4
