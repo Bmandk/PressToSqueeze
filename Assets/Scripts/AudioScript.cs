@@ -6,14 +6,14 @@ public class AudioScript : MonoBehaviour
 {
 
 
-    public AudioClip landingClip;
-    public AudioClip jumpClip;
-    public AudioClip squeezeClip;
-    public AudioClip releaseClip;
-    public AudioClip deathClip;
-    public AudioClip wallkingClip;
+    public List<AudioClip> landingClips;
+    public List<AudioClip> jumpClips;
+    public List<AudioClip> squeezeClips;
+    public List<AudioClip> releaseClips;
+    public List<AudioClip> deathClips;
+    public List<AudioClip> wallkingDryClips;
+    public List<AudioClip> wallkingWetClips;
 
-    public List<AudioClip> dripClips;
 
     private Rigidbody2D _rigidbody2D;
     private AudioSource _audioSource;
@@ -28,34 +28,59 @@ public class AudioScript : MonoBehaviour
 
     public void PlaySqueezeClip()
     {
-        _audioSource.PlayOneShot(squeezeClip);
+        if(squeezeClips.Count == 0)
+        {
+            return;
+        }
+        int clipIndex = Random.Range(0, squeezeClips.Count);
+
+        _audioSource.PlayOneShot(squeezeClips[clipIndex]);
     }
 
     public void PlayReleaseClip()
     {
-        _audioSource.PlayOneShot(releaseClip);
+        if (releaseClips.Count == 0)
+        {
+            return;
+        }
+        int clipIndex = Random.Range(0, releaseClips.Count);
+        _audioSource.PlayOneShot(releaseClips[clipIndex]);
     }
 
     public void PlayJumpClip()
     {
-        _audioSource.PlayOneShot(jumpClip);
+
+        if (jumpClips.Count == 0)
+        {
+            return;
+        }
+        int clipIndex = Random.Range(0, jumpClips.Count);
+        _audioSource.PlayOneShot(jumpClips[clipIndex]);
     }
 
     public void PlayLandingClip()
     {
-        _audioSource.PlayOneShot(landingClip);
+        
+        if (landingClips.Count == 0)
+        {
+            return;
+        }
+
+        int clipIndex = Random.Range(0, landingClips.Count);
+
+        _audioSource.PlayOneShot(landingClips[clipIndex]);
     }
 
 
 
     void OnCollisionEnter2D(Collision2D collision)
     {
-        _audioSource.PlayOneShot(landingClip);
+        PlayLandingClip();
     }
 
     void OnCollisionExit2D(Collision2D collision)
     {
-        _audioSource.PlayOneShot(jumpClip);
+        PlayJumpClip();
     }
 
     void OnCollisionStay2D(Collision2D collision)
@@ -63,8 +88,34 @@ public class AudioScript : MonoBehaviour
         //check if the walking clip is already playing
         //if not, play it
 
-        if (!_audioSource.isPlaying)
+        Debug.Log(_rigidbody2D.velocity.x);
+
+        if (!_audioSource.isPlaying && Mathf.Abs(_rigidbody2D.velocity.x) > 0.01)
         {
+
+
+            float wetDryNum = Random.Range(0, 1);
+
+            List<AudioClip> wallkingClips = new List<AudioClip>();
+
+            Debug.Log(_spongeScript.currentWaterAmount);
+            if (wetDryNum < _spongeScript.currentWaterAmount)
+            {
+                //play wet clip
+                wallkingClips = wallkingWetClips;
+            }
+            else
+            {
+                //play dry clip
+                wallkingClips = wallkingDryClips;
+            }
+
+            //choose a walking clip
+            int clipIndex = Random.Range(0, wallkingClips.Count);
+
+            AudioClip wallkingClip = wallkingClips[clipIndex];
+
+
             _audioSource.PlayOneShot(wallkingClip);
         }
     }
