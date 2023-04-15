@@ -71,6 +71,42 @@ public class AudioScript : MonoBehaviour
         _audioSource.PlayOneShot(landingClips[clipIndex]);
     }
 
+    public void PlayWalkingClip()
+    {
+        if(wallkingDryClips.Count == 0 && wallkingWetClips.Count == 0)
+        {
+            return;
+        }
+        if (!_audioSource.isPlaying && Mathf.Abs(_rigidbody2D.velocity.x) > 0.01)
+        {
+
+
+            float wetDryNum = Random.Range(0, 1);
+
+            List<AudioClip> wallkingClips = new List<AudioClip>();
+
+            Debug.Log(_spongeScript.currentWaterAmount);
+            if (wetDryNum < _spongeScript.currentWaterAmount)
+            {
+                //play wet clip
+                wallkingClips = wallkingWetClips;
+            }
+            else
+            {
+                //play dry clip
+                wallkingClips = wallkingDryClips;
+            }
+
+            //choose a walking clip
+            int clipIndex = Random.Range(0, wallkingClips.Count);
+
+            AudioClip wallkingClip = wallkingClips[clipIndex];
+
+
+            _audioSource.PlayOneShot(wallkingClip);
+        }
+    }
+
 
 
     void OnCollisionEnter2D(Collision2D collision)

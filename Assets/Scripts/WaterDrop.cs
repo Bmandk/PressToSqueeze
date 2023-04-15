@@ -5,6 +5,9 @@ using UnityEngine;
 
 public class WaterDrop : MonoBehaviour
 {
+
+
+    public List<AudioClip> waterDropletAudioClips;
     public GameObject waterShadowPrefab;
     private void OnTriggerEnter2D(Collider2D other)
     {
@@ -14,6 +17,13 @@ public class WaterDrop : MonoBehaviour
         var waterReceiver = other.GetComponent<WaterReceiver>();
         if (waterReceiver != null) 
             waterReceiver.AddWater(1);
+
+
+        if (waterDropletAudioClips.Count > 0)
+        {
+            AudioSource.PlayClipAtPoint(waterDropletAudioClips[UnityEngine.Random.Range(0, waterDropletAudioClips.Count)], transform.position);
+        }
+
 
         Instantiate(waterShadowPrefab, transform.position, Quaternion.identity);
         Destroy(gameObject);
