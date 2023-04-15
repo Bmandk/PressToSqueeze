@@ -32,7 +32,7 @@ public class SpongeScript : MonoBehaviour
 
     private void Awake()
     {
-        _meshRenderer = GetComponent<MeshRenderer>();
+        _meshRenderer = GetComponentInChildren<MeshRenderer>();
     }
 
     [ContextMenu("Generate")]
@@ -41,7 +41,7 @@ public class SpongeScript : MonoBehaviour
         // Get mesh filter if null
         if (_meshFilter == null)
         {
-            _meshFilter = GetComponent<MeshFilter>();
+            _meshFilter = GetComponentInChildren<MeshFilter>();
         }
         
         // Create mesh

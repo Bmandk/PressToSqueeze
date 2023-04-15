@@ -19,6 +19,8 @@ public class PlayerInput : MonoBehaviour
     [Range(0, 0.1f)]
     public float squeezeDecayForce = 0.01f;
     public SqueezeType squeezeType = SqueezeType.Hold;
+    public float smallJumpForce = 0.1f;
+    public float floorRaycastDistance;
     
     private Rigidbody2D _rigidbody2D;
     private SpongeScript _spongeScript;
@@ -63,6 +65,11 @@ public class PlayerInput : MonoBehaviour
                     throw new ArgumentOutOfRangeException();
             }
         }
+
+        if (Mathf.Abs(_rigidbody2D.velocity.x) > 0.1f)
+        {
+            CheckSmallJump();
+        }
     }
 
 
@@ -100,6 +107,39 @@ public class PlayerInput : MonoBehaviour
         }
 
         _rigidbody2D.velocity = velocity;
+    }
+    
+    private float smallJumpVelocity;
+    private bool isSmallJumping;
+    public Transform graphics;
+    public float smallGravity;
+
+    private void CheckSmallJump()
+    {
+        var col = GetComponent<Collider2D>();
+        RaycastHit2D[] results = new RaycastHit2D[9];
+        if (!isSmallJumping && col.Raycast(Vector2.down, results, floorRaycastDistance) > 0)
+        {
+            StartCoroutine(SmallJump());
+        }
+    }
+
+    private IEnumerator SmallJump()
+    {
+        if (isSmallJumping)
+            yield break;
+        isSmallJumping = true;
+        smallJumpVelocity = smallJumpForce;
+        while (graphics.localPosition.y >= 0)
+        {
+            yield return null;
+            smallJumpVelocity += smallGravity * Time.deltaTime;
+            graphics.position += Vector3.up * smallJumpVelocity;
+        }
+        isSmallJumping = false;
+        var graphicsLocalPosition = graphics.localPosition;
+        graphicsLocalPosition.y = 0;
+        graphics.localPosition = graphicsLocalPosition;
     }
 
     private void KeyboardSqueezeHold()

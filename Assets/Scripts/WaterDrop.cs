@@ -7,7 +7,7 @@ public class WaterDrop : MonoBehaviour
 {
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Player") || other.CompareTag("WaterDrop"))
+        if (other.CompareTag("Player") || other.CompareTag("WaterDrop") || other.CompareTag("Water"))
             return;
 
         var waterReceiver = other.GetComponent<WaterReceiver>();
