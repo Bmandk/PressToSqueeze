@@ -336,6 +336,10 @@ MonoBehaviour:
     m_Mode: 0
     m_NumColorKeys: 2
     m_NumAlphaKeys: 2
+  waterDropPrefab: {fileID: 0}
+  waterPerDrop: 0.1
+  currentWaterDropAmount: 0
+  waterDropSpawnRadius: 0
 --- !u!114 &8316913941563974173
 MonoBehaviour:
   m_ObjectHideFlags: 0

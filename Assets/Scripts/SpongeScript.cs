@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
+using Random = UnityEngine.Random;
 
 public class SpongeScript : MonoBehaviour
 {
@@ -21,6 +22,10 @@ public class SpongeScript : MonoBehaviour
     public float waterSqueezeRate = 0.01f;
     public float currentWaterAmount;
     public Gradient waterColorGradient;
+    public GameObject waterDropPrefab;
+    public float waterPerDrop = 0.1f;
+    public float currentWaterDropAmount;
+    public float waterDropSpawnRadius;
 
     private MeshFilter _meshFilter;
     private MeshRenderer _meshRenderer;
@@ -57,10 +62,10 @@ public class SpongeScript : MonoBehaviour
             float bottomSqueezeValue = Mathf.Lerp(bottomUnSqueezeCurve.Evaluate(percentage), bottomSqueezeCurve.Evaluate(percentage), s);
             
             // Insert vertex at the top and bottom of the plane
-            vertices.Add(new Vector3(percentage, 1f - topSqueezeValue, 0f));
+            vertices.Add(new Vector3(percentage - 0.5f, 0.5f - topSqueezeValue, 0f));
             uvs.Add(new Vector2(percentage, 1f));
             
-            vertices.Add(new Vector3(percentage, 0 + bottomSqueezeValue, 0f));
+            vertices.Add(new Vector3(percentage - 0.5f, -0.5f + bottomSqueezeValue, 0f));
             uvs.Add(new Vector2(percentage, 0));
         }
         
@@ -115,5 +120,17 @@ public class SpongeScript : MonoBehaviour
         currentWaterAmount = Mathf.Clamp01(currentWaterAmount + amount);
         var waterColor = waterColorGradient.Evaluate(currentWaterAmount);
         _meshRenderer.material.color = waterColor;
+        
+        if (currentWaterAmount > -amount)
+        {
+            currentWaterDropAmount += Mathf.Max(-amount, 0);
+            
+            while (currentWaterDropAmount > waterPerDrop)
+            {
+                currentWaterDropAmount -= waterPerDrop;
+                var position = transform.position + (Vector3)Random.insideUnitCircle * waterDropSpawnRadius;
+                var waterDrop = Instantiate(waterDropPrefab, position, Quaternion.identity);
+            }
+        }
     }
 }
