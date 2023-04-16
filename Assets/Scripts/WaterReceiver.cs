@@ -12,7 +12,7 @@ public class WaterReceiver : MonoBehaviour
     public GameObject[] sprites;
     public int dropsPerSprite = 5;
     public int currentDrops = 0;
-    private int index = 0;
+    private int index = -1;
 
     public void AddWater(int amount)
     {
@@ -21,7 +21,8 @@ public class WaterReceiver : MonoBehaviour
         if (currentDrops >= dropsPerSprite)
         {
             currentDrops -= dropsPerSprite;
-            sprites[index].SetActive(false);
+            if (index >= 0)
+                sprites[index].SetActive(false);
             index++;
             if (index >= sprites.Length)
             {

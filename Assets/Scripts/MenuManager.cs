@@ -1,12 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class MenuManager : MonoBehaviour
 {
 
     public GameObject player;
+    public Button defaultButton;
     private PlayerInput playerInput;
 
     public void Awake()
@@ -16,6 +19,11 @@ public class MenuManager : MonoBehaviour
             player = GameObject.FindWithTag("Player");
         }
         playerInput = player.GetComponent<PlayerInput>();
+
+        if (Gamepad.current != null)
+        {
+            defaultButton.Select();
+        }
     }
 
     public void Start()
@@ -52,7 +60,7 @@ public class MenuManager : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.Escape) || (Gamepad.current != null && Gamepad.current.startButton.wasPressedThisFrame))
         {
             if(IsMenuVisible())
             {

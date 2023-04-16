@@ -181,7 +181,6 @@ public class PlayerInput : MonoBehaviour
 
     private IEnumerator Squish(AnimationCurve curve)
     {
-        Debug.Log("StartSquish");
         var graphicsScale = graphics.transform.localScale;
         float startTime = Time.timeSinceLevelLoad;
         float endTime = Time.timeSinceLevelLoad + curve.keys[curve.length - 1].time;
@@ -198,8 +197,7 @@ public class PlayerInput : MonoBehaviour
         
         graphicsScale.x = originalXScale;
         graphics.transform.localScale = graphicsScale;
-        Debug.Log("EndSquish");
-    }
+}
 
     private void KeyboardSqueezeHold()
     {
