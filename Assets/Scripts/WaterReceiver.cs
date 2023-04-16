@@ -18,6 +18,7 @@ public class WaterReceiver : MonoBehaviour
     public AnimationCurve fadeImageCurve;
     private int index = -1;
     public AudioClip upgradeClip;
+    public AudioClip winClip;
 
     public void AddWater(int amount)
     {
@@ -41,6 +42,7 @@ public class WaterReceiver : MonoBehaviour
 
     private void WinGame()
     {
+        AudioSource.PlayClipAtPoint(winClip, transform.position);
         StartCoroutine(FadeImage());
     }
 
