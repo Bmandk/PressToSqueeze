@@ -89,7 +89,7 @@ public class PlayerInput : MonoBehaviour
         velocity.y = _rigidbody2D.velocity.y;
         if (Keyboard.current.spaceKey.wasPressedThisFrame)
         {
-            velocity.y = jumpForce;
+            Jump(ref velocity);
         }
         _rigidbody2D.velocity = velocity;
     }
@@ -105,10 +105,19 @@ public class PlayerInput : MonoBehaviour
         velocity.y = _rigidbody2D.velocity.y;
         if (gamepad.aButton.wasPressedThisFrame)
         {
-            velocity.y = jumpForce;
+            Jump(ref velocity);
         }
 
         _rigidbody2D.velocity = velocity;
+    }
+    
+    public void Jump(ref Vector2 velocity)
+    {
+        RaycastHit2D[] results = new RaycastHit2D[9];
+        if (col.Raycast(Vector2.down, results, floorRaycastDistance) > 0)
+        {
+            velocity.y = jumpForce;
+        }
     }
     
     private float smallJumpVelocity;

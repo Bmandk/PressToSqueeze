@@ -122,6 +122,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 59efa906fb225614eb4014d1da8d07ad, type: 3}
   - {fileID: 8300000, guid: 290409487b91b6f4aa875d7aad29d9a6, type: 3}
   - {fileID: 8300000, guid: 1b511ff114534f14c96270b706441bb2, type: 3}
+  waterShadowPrefab: {fileID: 2659776984955779016, guid: b106b1272fc945f4ab5918a4b0feacb6, type: 3}
 --- !u!50 &5457932630162227981
 Rigidbody2D:
   serializedVersion: 4
