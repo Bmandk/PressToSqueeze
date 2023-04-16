@@ -124,7 +124,7 @@ public class AudioScript : MonoBehaviour
         //check if the walking clip is already playing
         //if not, play it
 
-        Debug.Log(_rigidbody2D.velocity.x);
+        //Debug.Log(_rigidbody2D.velocity.x);
 
         if (!_audioSource.isPlaying && Mathf.Abs(_rigidbody2D.velocity.x) > 0.01)
         {
@@ -134,7 +134,7 @@ public class AudioScript : MonoBehaviour
 
             List<AudioClip> wallkingClips = new List<AudioClip>();
 
-            Debug.Log(_spongeScript.currentWaterAmount);
+            //Debug.Log(_spongeScript.currentWaterAmount);
             if (wetDryNum < _spongeScript.currentWaterAmount)
             {
                 //play wet clip

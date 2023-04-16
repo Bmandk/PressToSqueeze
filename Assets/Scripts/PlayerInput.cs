@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Serialization;
+using Random = UnityEngine.Random;
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class PlayerInput : MonoBehaviour
@@ -21,16 +22,19 @@ public class PlayerInput : MonoBehaviour
     public SqueezeType squeezeType = SqueezeType.Hold;
     public float smallJumpForce = 0.1f;
     public float floorRaycastDistance;
+    public AnimationCurve waterSpeedCurve;
     
     private Rigidbody2D _rigidbody2D;
     private SpongeScript _spongeScript;
     private Collider2D col;
+    private float originalXScale;
 
     private void Awake()
     {
         _rigidbody2D = GetComponent<Rigidbody2D>();
         _spongeScript = GetComponent<SpongeScript>();
         col = GetComponent<Collider2D>();
+        originalXScale = graphics.transform.localScale.x;
     }
 
     private void Update()
@@ -86,6 +90,8 @@ public class PlayerInput : MonoBehaviour
         {
             velocity.x = speed;
         }
+
+        velocity.x *= waterSpeedCurve.Evaluate(_spongeScript.currentWaterAmount);
         velocity.y = _rigidbody2D.velocity.y;
         if (Keyboard.current.spaceKey.wasPressedThisFrame)
         {
@@ -101,6 +107,7 @@ public class PlayerInput : MonoBehaviour
 
         var leftStick = gamepad.leftStick.ReadValue();
         velocity.x = leftStick.x * speed;
+        velocity.x *= waterSpeedCurve.Evaluate(_spongeScript.currentWaterAmount);
 
         velocity.y = _rigidbody2D.velocity.y;
         if (gamepad.aButton.wasPressedThisFrame)
@@ -114,7 +121,7 @@ public class PlayerInput : MonoBehaviour
     public void Jump(ref Vector2 velocity)
     {
         RaycastHit2D[] results = new RaycastHit2D[9];
-        if (col.Raycast(Vector2.down, results, floorRaycastDistance) > 0)
+        if (col.Raycast(Vector2.down, results, floorRaycastDistance  * transform.localScale.y) > 0)
         {
             velocity.y = jumpForce;
         }
@@ -126,11 +133,13 @@ public class PlayerInput : MonoBehaviour
     public float smallGravity;
     public GameObject waterShadowPrefab;
     public float waterShadowOffset;
+    public float waterShadowJitter;
+    public AnimationCurve smallJumpSquishCurve;
 
     private void CheckSmallJump()
     {
         RaycastHit2D[] results = new RaycastHit2D[9];
-        if (!isSmallJumping && col.Raycast(Vector2.down, results, floorRaycastDistance) > 0)
+        if (!isSmallJumping && col.Raycast(Vector2.down, results, floorRaycastDistance * transform.localScale.y) > 0)
         {
             StartCoroutine(SmallJump());
         }
@@ -154,14 +163,42 @@ public class PlayerInput : MonoBehaviour
         graphics.localPosition = graphicsLocalPosition;
 
         RaycastHit2D[] results = new RaycastHit2D[9];
-        if (_spongeScript.currentWaterAmount > 0.05f && col.Raycast(Vector2.down, results, floorRaycastDistance) > 0)
+        if (col.Raycast(Vector2.down, results, floorRaycastDistance * transform.localScale.y) > 0)
         {
-            var shadow = Instantiate(waterShadowPrefab, transform.position + Vector3.down * waterShadowOffset, Quaternion.identity);
-            var sr = shadow.GetComponent<SpriteRenderer>();
-            var color = sr.color;
-            color.a = _spongeScript.currentWaterAmount * color.a;
-            sr.color = color;
+            StartCoroutine(Squish(smallJumpSquishCurve));
+            if (_spongeScript.currentWaterAmount > 0.05f)
+            {
+                var shadow = Instantiate(waterShadowPrefab, transform.position + Vector3.down * waterShadowOffset + Vector3.down * Random.Range(-waterShadowJitter, waterShadowJitter),
+                    Quaternion.identity);
+                var sr = shadow.GetComponent<SpriteRenderer>();
+                var color = sr.color;
+                color.a = _spongeScript.currentWaterAmount * color.a;
+                sr.color = color;
+            }
         }
+    }
+
+
+    private IEnumerator Squish(AnimationCurve curve)
+    {
+        Debug.Log("StartSquish");
+        var graphicsScale = graphics.transform.localScale;
+        float startTime = Time.timeSinceLevelLoad;
+        float endTime = Time.timeSinceLevelLoad + curve.keys[curve.length - 1].time;
+        
+        while (Time.timeSinceLevelLoad < endTime)
+        {
+            //float t = (endTime - Time.timeSinceLevelLoad) / curve.keys[curve.length - 1].time;
+            float t = (Time.timeSinceLevelLoad - startTime);
+            float scale = curve.Evaluate(t);
+            graphicsScale.x = originalXScale * scale;
+            graphics.transform.localScale = graphicsScale;
+            yield return null;
+        }
+        
+        graphicsScale.x = originalXScale;
+        graphics.transform.localScale = graphicsScale;
+        Debug.Log("EndSquish");
     }
 
     private void KeyboardSqueezeHold()

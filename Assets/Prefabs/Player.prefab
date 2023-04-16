@@ -348,6 +348,12 @@ MonoBehaviour:
   waterPerDrop: 0.2
   currentWaterDropAmount: 0
   waterDropSpawnRadius: 0.5
+  waterScaleCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!114 &8316913941563974173
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -368,10 +374,23 @@ MonoBehaviour:
   squeezeType: 0
   smallJumpForce: 0.04
   floorRaycastDistance: 1
+  waterSpeedCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   graphics: {fileID: 2673316789792902823}
   smallGravity: -0.3
   waterShadowPrefab: {fileID: 2659776984955779016, guid: b106b1272fc945f4ab5918a4b0feacb6, type: 3}
   waterShadowOffset: 0.6
+  waterShadowJitter: 0
+  smallJumpSquishCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!58 &3469287838218011245
 CircleCollider2D:
   m_ObjectHideFlags: 0
