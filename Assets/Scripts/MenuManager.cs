@@ -79,6 +79,8 @@ public class MenuManager : MonoBehaviour
     {
         for (int a = 0; a < transform.childCount; a++)
         {
+            if (transform.GetChild(a).name == "Image")
+                return;
             transform.GetChild(a).gameObject.SetActive(active);
         }
     }
