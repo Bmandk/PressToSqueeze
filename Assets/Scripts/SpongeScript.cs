@@ -31,6 +31,8 @@ public class SpongeScript : MonoBehaviour
     private MeshRenderer _meshRenderer;
     private Vector3 originalScale;
 
+    public bool changingSize = false;
+
     private void Awake()
     {
         _meshRenderer = GetComponentInChildren<MeshRenderer>();
@@ -106,6 +108,9 @@ public class SpongeScript : MonoBehaviour
         squeezeValue = Mathf.Clamp01(value + squeezeValue);
         if (value > 0)
             AddWaterAmount(-waterSqueezeRate * value);
+        else {
+            changingSize = false;
+        }
         GenerateMesh();
     }
     
@@ -126,7 +131,7 @@ public class SpongeScript : MonoBehaviour
         transform.localScale = originalScale * scale;
         var waterColor = waterColorGradient.Evaluate(currentWaterAmount);
         _meshRenderer.material.color = waterColor;
-        
+        changingSize = true;
         if (currentWaterAmount > -amount)
         {
             currentWaterDropAmount += Mathf.Max(-amount, 0);
