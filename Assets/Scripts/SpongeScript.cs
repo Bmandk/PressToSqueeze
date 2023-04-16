@@ -123,6 +123,8 @@ public class SpongeScript : MonoBehaviour
     }
     
     public AnimationCurve waterScaleCurve;
+    public float waterDropForce;
+    public float waterDropAngle;
     
     public void AddWaterAmount(float amount)
     {
@@ -141,6 +143,9 @@ public class SpongeScript : MonoBehaviour
                 currentWaterDropAmount -= waterPerDrop;
                 var position = transform.position + (Vector3)Random.insideUnitCircle * waterDropSpawnRadius;
                 var waterDrop = Instantiate(waterDropPrefab, position, Quaternion.identity);
+                float angle = Random.Range(-waterDropAngle, waterDropAngle) * Mathf.Deg2Rad;
+                Vector2 dir = new Vector2(Mathf.Sin(angle), Mathf.Cos(angle));
+                waterDrop.GetComponent<Rigidbody2D>().velocity = dir * waterDropForce;
             }
         }
     }

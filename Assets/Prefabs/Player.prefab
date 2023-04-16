@@ -382,6 +382,8 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  waterDropForce: 0
+  waterDropAngle: 0
 --- !u!114 &8316913941563974173
 MonoBehaviour:
   m_ObjectHideFlags: 0
