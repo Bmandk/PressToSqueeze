@@ -29,10 +29,12 @@ public class SpongeScript : MonoBehaviour
 
     private MeshFilter _meshFilter;
     private MeshRenderer _meshRenderer;
+    private Vector3 originalScale;
 
     private void Awake()
     {
         _meshRenderer = GetComponentInChildren<MeshRenderer>();
+        originalScale = transform.localScale;
     }
 
     [ContextMenu("Generate")]
@@ -115,9 +117,13 @@ public class SpongeScript : MonoBehaviour
         }
     }
     
+    public AnimationCurve waterScaleCurve;
+    
     public void AddWaterAmount(float amount)
     {
         currentWaterAmount = Mathf.Clamp01(currentWaterAmount + amount);
+        var scale = waterScaleCurve.Evaluate(currentWaterAmount);
+        transform.localScale = originalScale * scale;
         var waterColor = waterColorGradient.Evaluate(currentWaterAmount);
         _meshRenderer.material.color = waterColor;
         
