@@ -19,6 +19,10 @@ public class AudioScript : MonoBehaviour
     private AudioSource _audioSource;
     private SpongeScript _spongeScript;
 
+    private float lastLandingTime;
+
+
+
     void Awake()
     {
         _rigidbody2D = GetComponent<Rigidbody2D>();
@@ -65,10 +69,18 @@ public class AudioScript : MonoBehaviour
         {
             return;
         }
+        if(lastLandingTime == null)
+        {
+            lastLandingTime = Time.time;
+        }
 
-        int clipIndex = Random.Range(0, landingClips.Count);
+        if (!_spongeScript.changingSize)
+        {
+            int clipIndex = Random.Range(0, landingClips.Count);
 
-        _audioSource.PlayOneShot(landingClips[clipIndex]);
+            _audioSource.PlayOneShot(landingClips[clipIndex]);
+            lastLandingTime = Time.time;
+        }
     }
 
     public void PlayWalkingClip()
@@ -85,7 +97,6 @@ public class AudioScript : MonoBehaviour
 
             List<AudioClip> wallkingClips = new List<AudioClip>();
 
-            Debug.Log(_spongeScript.currentWaterAmount);
             if (wetDryNum < _spongeScript.currentWaterAmount)
             {
                 //play wet clip

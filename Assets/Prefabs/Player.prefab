@@ -348,6 +348,7 @@ MonoBehaviour:
   waterPerDrop: 0.2
   currentWaterDropAmount: 0
   waterDropSpawnRadius: 0.5
+  changingSize: 0
   waterScaleCurve:
     serializedVersion: 2
     m_Curve:
