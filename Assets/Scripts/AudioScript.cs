@@ -6,7 +6,8 @@ public class AudioScript : MonoBehaviour
 {
 
 
-    public List<AudioClip> landingClips;
+    public List<AudioClip> landingWetClips;
+    public List<AudioClip> landingDryClips;
     public List<AudioClip> jumpClips;
     public List<AudioClip> squeezeClips;
     public List<AudioClip> releaseClips;
@@ -65,7 +66,7 @@ public class AudioScript : MonoBehaviour
     public void PlayLandingClip()
     {
         
-        if (landingClips.Count == 0)
+        if (landingDryClips.Count == 0 && landingDryClips.Count == 0)
         {
             return;
         }
@@ -76,9 +77,29 @@ public class AudioScript : MonoBehaviour
 
         if (!_spongeScript.changingSize)
         {
+
+            float wetDryNum = Random.Range(0, 1);
+
+            List<AudioClip> landingClips = new List<AudioClip>();
+
+            if (wetDryNum < _spongeScript.currentWaterAmount)
+            {
+                //play wet clip
+                landingClips = landingWetClips;
+            }
+            else
+            {
+                //play dry clip
+                landingClips = landingDryClips;
+            }
+
+            //choose a walking clip
             int clipIndex = Random.Range(0, landingClips.Count);
 
-            _audioSource.PlayOneShot(landingClips[clipIndex]);
+            AudioClip landingClip = landingClips[clipIndex];
+
+
+            _audioSource.PlayOneShot(landingClip);
             lastLandingTime = Time.time;
         }
     }

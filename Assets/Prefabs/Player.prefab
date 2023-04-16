@@ -588,9 +588,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c63d027d79096b4e92e195105af3409, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  landingClips:
+  landingWetClips:
   - {fileID: 8300000, guid: 3fb8c1d2b1cef7b46835d9150de40865, type: 3}
   - {fileID: 8300000, guid: 92b838597165b374f9bc9a2574eb885a, type: 3}
+  landingDryClips:
+  - {fileID: 8300000, guid: a3f8790c17000eb4db1bba0074e6123f, type: 3}
+  - {fileID: 8300000, guid: 5bd6816ac42e35c47896b578c35b0841, type: 3}
   jumpClips: []
   squeezeClips: []
   releaseClips: []
